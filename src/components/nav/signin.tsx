@@ -13,17 +13,33 @@ const SignInPage: React.FC = () => {
 
   const [errors, setErrors] = useState<Partial<SignInForm>>({});
 
+  const validateField = (name: string, value: string) => {
+    let error = "";
+    if (name === "email") {
+      if (!value) {
+        error = "Email is required";
+      } else if (!/\S+@\S+\.\S+/.test(value)) {
+        error = "Email is invalid";
+      }
+    } else if (name === "password" && !value) {
+      error = "Password is required";
+    }
+    return error;
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: validateField(name, value),
+    }));
   };
 
   const validateForm = () => {
     const newErrors: Partial<SignInForm> = {};
-    if (!formData.email) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(formData.email))
-      newErrors.email = "Email is invalid";
-    if (!formData.password) newErrors.password = "Password is required";
+    newErrors.email = validateField("email", formData.email);
+    newErrors.password = validateField("password", formData.password);
     return newErrors;
   };
 
@@ -41,7 +57,7 @@ const SignInPage: React.FC = () => {
     <section className="ml-[120px] mt-[120px] mr-[120px]">
       <div className="container mx-auto px-4">
         <h1 className="text-4xl font-bold text-center mb-8">Sign In</h1>
-        
+
         <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
           <div className="mb-6">
             <label htmlFor="email" className="block text-gray-700 mb-2">Email:</label>

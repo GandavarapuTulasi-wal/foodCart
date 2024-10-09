@@ -9,7 +9,7 @@ type Props = {
 const Home = ({ setSelectedPage }: Props) => {
 
   useEffect(() => {
-    setSelectedPage(SelectedPage.Search);
+    setSelectedPage(SelectedPage.Home);
   }, [setSelectedPage]);
 
   return (
